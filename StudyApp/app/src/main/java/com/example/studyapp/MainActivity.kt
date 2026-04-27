@@ -60,6 +60,7 @@ import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.example.studyapp.core.navigation.AppNavigation
 
 const val TAG = "StudyAppMainActivity" // TAG
 
@@ -72,12 +73,8 @@ class MainActivity : ComponentActivity() {
             StudyAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
-//                        Titulo("Teste testeee")
-//                        Contador()
-//                        CounterRow()
-//                        CaracterCounter()
-//                        DynamicListScreen()
-                        App()
+//                        App()
+                        AppNavigation()
                     }
                 }
             }
@@ -137,7 +134,7 @@ fun CaracterCounter() {
 @Composable
 fun HomeScreen(onNavigateToSecond: () -> Unit,
                onAddName: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
 
     Scaffold(
