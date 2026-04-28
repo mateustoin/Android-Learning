@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -50,7 +51,7 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
             FloatingActionButton(onClick = {
                 onNavigateToSecond()
             }) {
-                Icon(Icons.Default.ArrowForward, contentDescription = "Navegar Tela")
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Navegar Tela")
             }
         }
     ) { innerPadding ->

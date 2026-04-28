@@ -6,8 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.studyapp.HomeScreen
-import com.example.studyapp.SecondScreenCompose
+import com.example.studyapp.feature.home.HomeScreen
+import com.example.studyapp.feature.names.SecondScreenCompose
 
 @Composable
 fun AppNavigation() {
@@ -15,14 +15,14 @@ fun AppNavigation() {
 //    val viewModel: NamesViewModel = NamesViewModel()
     val names = remember { mutableStateListOf<String>("") }
 
-    NavHost(navController, startDestination = "HomeScreen") {
-        composable("HomeScreen") {
+    NavHost(navController, startDestination = HomeRoute) {
+        composable<HomeRoute> {
             HomeScreen(
-                { navController.navigate("SecondScreen") },
+                { navController.navigate(NamesListRoute) },
 //                onAddName = { newName -> viewModel.addName(newName) })
                 onAddName = { newName -> names.add(newName) })
         }
-        composable("SecondScreen") {
+        composable<NamesListRoute> {
             SecondScreenCompose(names = names, onBack = { navController.popBackStack() })
         }
     }
