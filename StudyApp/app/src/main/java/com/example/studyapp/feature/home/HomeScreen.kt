@@ -2,6 +2,7 @@ package com.example.studyapp.feature.home
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -30,13 +32,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.studyapp.feature.users.UserUiState
+import com.example.studyapp.feature.users.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(onNavigateToSecond: () -> Unit,
-               onAddName: (String) -> Unit) {
+               viewModel : UserViewModel) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     var text by rememberSaveable { mutableStateOf("") }
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -72,15 +77,34 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
             )
             Spacer(Modifier.height(16.dp))
             Button(onClick = {
-                if (text.isNotBlank()){
-                    onAddName(text)
-                    Toast.makeText(context, "Nome $text adicionado!", Toast.LENGTH_SHORT).show()
-                    text = ""
-                } else {
-                    Toast.makeText(context, "Nome vazio!", Toast.LENGTH_SHORT).show()
+                    if (text.isNotBlank()) {
+                        viewModel.addUser(text)
+                        text = ""
+                    }
+                             },
+                enabled = state !is UserUiState.Loading,
+                modifier = Modifier.fillMaxWidth()) {
+                Text("Insert Nome")
+            }
+
+            // Region to states animation
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                when (state) {
+                    is UserUiState.Loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is UserUiState.Success -> {
+                        Text(text = "User added successfully!", color = MaterialTheme.colorScheme.primary)
+                    }
+
+                    is UserUiState.Error -> {
+                        Text(text = (state as UserUiState.Error).message, color = MaterialTheme.colorScheme.error)
+                    }
                 }
-            }, Modifier.fillMaxWidth()) {
-                Text("Insira Nome")
             }
         }
     }

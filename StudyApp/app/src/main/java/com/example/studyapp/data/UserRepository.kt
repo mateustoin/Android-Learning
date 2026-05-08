@@ -8,7 +8,7 @@ data class User(val name: String)
 // Interface to define what the repository should do
 interface UserRepository {
     suspend fun getUsers(): List<User>
-    suspend fun addUser(nome: String)
+    suspend fun addUser(name: String)
 }
 
 class FakeUserRepository : UserRepository {
