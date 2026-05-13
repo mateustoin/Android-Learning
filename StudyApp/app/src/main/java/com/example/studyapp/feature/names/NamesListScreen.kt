@@ -17,12 +17,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.studyapp.feature.users.UserUiState
+import com.example.studyapp.feature.users.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecondScreenCompose(names: List<String>, onBack: () -> Unit) {
+fun SecondScreenCompose(viewModel: UserViewModel, onBack: () -> Unit) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.refreshUsers()
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -42,9 +54,19 @@ fun SecondScreenCompose(names: List<String>, onBack: () -> Unit) {
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             LazyColumn {
-                items(names) { name ->
-                    Text(text = name, modifier = Modifier.padding(16.dp))
-                    HorizontalDivider()
+                when (val state = uiState) {
+                    is UserUiState.Loading -> {
+                        item { Text("Loading...", modifier = Modifier.padding(16.dp)) }
+                    }
+                    is UserUiState.SuccessLoadingUsers -> {
+                        items(state.users) { user ->
+                            Text(text = user.name, modifier = Modifier.padding(16.dp))
+                            HorizontalDivider()
+                        }
+                    }
+                    is UserUiState.ErrorLoadingUsers -> {
+                        item { Text("Error: ${state.message}", modifier = Modifier.padding(16.dp)) }
+                    }
                 }
             }
         }

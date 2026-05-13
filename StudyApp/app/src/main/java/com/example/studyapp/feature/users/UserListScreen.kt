@@ -17,12 +17,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.studyapp.feature.users.UserUiState
+import com.example.studyapp.feature.users.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreenCompose(names: List<String>, onBack: () -> Unit) {
+fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -42,9 +50,27 @@ fun UserListScreenCompose(names: List<String>, onBack: () -> Unit) {
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             LazyColumn {
-                items(names) { name ->
-                    Text(text = name, modifier = Modifier.padding(16.dp))
-                    HorizontalDivider()
+                when (state) {
+                    is UserUiState.Loading -> {
+                        item { Text("Loading...", modifier = Modifier.padding(16.dp)) }
+                    }
+                    is UserUiState.SuccessLoadingUsers -> {
+                        val users = (state as UserUiState.SuccessLoadingUsers).users
+                        if (users.isNotEmpty()){
+                            items(users) { user ->
+                                Text(text = user.name, modifier = Modifier.padding(16.dp))
+                                HorizontalDivider()
+                            }
+                        } else {
+                            item {
+                                Text(text = "User List is empty!", modifier = Modifier.padding(16.dp))
+                            }
+                        }
+
+                    }
+                    is UserUiState.ErrorLoadingUsers -> {
+                        item { Text("Error: ${(state as UserUiState.ErrorLoadingUsers).message}", modifier = Modifier.padding(16.dp)) }
+                    }
                 }
             }
         }

@@ -10,25 +10,25 @@ import androidx.navigation.compose.rememberNavController
 import com.example.studyapp.feature.home.HomeScreen
 import com.example.studyapp.feature.names.SecondScreenCompose
 import com.example.studyapp.feature.users.UserViewModel
+import com.example.studyapp.feature.home.HomeViewModel
+import com.example.studyapp.feature.users.UserListScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-//    val viewModel: NamesViewModel = NamesViewModel()
     val names = remember { mutableStateListOf<String>("") }
 
 
     NavHost(navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
-            val viewModel: UserViewModel = viewModel()
+            val viewModel: HomeViewModel = viewModel()
             HomeScreen(
-                { navController.navigate(NamesListRoute) },
+                { navController.navigate(UserListRoute) },
                 viewModel = viewModel)
-//                onAddName = { newName -> viewModel.addName(newName) })
-//                onAddName = { newName -> names.add(newName) })
         }
-        composable<NamesListRoute> {
-            SecondScreenCompose(names = names, onBack = { navController.popBackStack() })
+        composable<UserListRoute> {
+            val viewModel: UserViewModel = viewModel()
+            UserListScreen(viewModel, onBack = { navController.popBackStack() })
         }
     }
 }

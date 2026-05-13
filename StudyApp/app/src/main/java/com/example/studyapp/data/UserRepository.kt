@@ -11,7 +11,8 @@ interface UserRepository {
     suspend fun addUser(name: String)
 }
 
-class FakeUserRepository : UserRepository {
+// Singleton until Hilt is implemented
+/*class*/object FakeUserRepository : UserRepository {
     // List to keep User information on Memory
     private val userList = mutableListOf<User>()
 

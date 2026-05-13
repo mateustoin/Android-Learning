@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 object HomeRoute
 
 @Serializable
-object NamesListRoute
+object UserListRoute

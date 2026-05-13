@@ -9,7 +9,7 @@ sealed interface UserUiState {
     // Data classes need to be instantiated with different data everytime, it shouldn't be Objects
     // "data class" instead of only "class" is optimized. If the value is equal to the last
     // one, compose does not trigger the recomposition (that is done under the hood)
-    data class Success(val users: List<User>) : UserUiState // User list loaded and available
+    data class SuccessLoadingUsers(val users: List<User>) : UserUiState // User list loaded and available
     // Error state also uses a data class to ensure the message is compared during recomposition
-    data class Error(val message: String) : UserUiState // Error retrieving User List
+    data class ErrorLoadingUsers(val message: String) : UserUiState // Error retrieving User List
 }

@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,16 +34,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.studyapp.feature.users.UserUiState
-import com.example.studyapp.feature.users.UserViewModel
+import com.example.studyapp.feature.home.HomeUiState
+import com.example.studyapp.feature.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(onNavigateToSecond: () -> Unit,
-               viewModel : UserViewModel) {
+               viewModel : HomeViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var text by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
+    val isButtonEnabled = text.isNotBlank() && state !is HomeUiState.Loading
 
+    LaunchedEffect(state) {
+        when (state) {
+            is HomeUiState.SuccessAddingUser -> {
+                Toast.makeText(context, "User ${(state as HomeUiState.SuccessAddingUser).user} added!", Toast.LENGTH_SHORT).show()
+            }
+            is HomeUiState.ErrorAddingUser -> {
+                Toast.makeText(context, "Error: ${(state as HomeUiState.ErrorAddingUser).message}", Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -68,44 +82,38 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
             horizontalAlignment = Alignment.CenterHorizontally) {
             OutlinedTextField(
                 value = text,
-                onValueChange = {
-                    text = it
-                },
-                label = { Text("Digite um nome") },
+                onValueChange = { text = it },
+                label = { Text("Insert name") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
             Spacer(Modifier.height(16.dp))
             Button(onClick = {
-                    if (text.isNotBlank()) {
-                        viewModel.addUser(text)
-                        text = ""
-                    }
-                             },
-                enabled = state !is UserUiState.Loading,
+                    viewModel.addUser(text)
+                    text = "" },
+                enabled = isButtonEnabled,
                 modifier = Modifier.fillMaxWidth()) {
-                Text("Insert Nome")
+                Text("Insert")
             }
 
             // Region to states animation
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                when (state) {
-                    is UserUiState.Loading -> {
-                        CircularProgressIndicator()
-                    }
-
-                    is UserUiState.Success -> {
-                        Text(text = "User added successfully!", color = MaterialTheme.colorScheme.primary)
-                    }
-
-                    is UserUiState.Error -> {
-                        Text(text = (state as UserUiState.Error).message, color = MaterialTheme.colorScheme.error)
-                    }
+            if (state is HomeUiState.Loading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
             }
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                when (state) {
+//                    is HomeUiState.Idle -> { }
+//
+//                    is HomeUiState.Loading -> {
+//                        CircularProgressIndicator()
+//                    }
+//                }
+//            }
         }
     }
 }
