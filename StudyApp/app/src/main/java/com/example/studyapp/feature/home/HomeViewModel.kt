@@ -19,23 +19,9 @@ class HomeViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-//    init {
-//        // Load users as soon as the ViewModel is created
-//        loadUsers()
-//    }
-
-//    private fun loadUsers() {
-//        // Create a coroutine (viewModelScope) to not freeze the UI
-//        viewModelScope.launch {
-//            _uiState.value = UserUiState.Loading
-//            try {
-//                val users = repository.getUsers()
-//                _uiState.value = UserUiState.Success(users)
-//            } catch (e: Exception) {
-//                _uiState.value = UserUiState.Error(e.message ?: "An error occurred during loadUsers")
-//            }
-//        }
-//    }
+    fun onEventFinished() {
+        _uiState.value = HomeUiState.Idle
+    }
 
     fun addUser(name: String) {
         if (name.isBlank()) return

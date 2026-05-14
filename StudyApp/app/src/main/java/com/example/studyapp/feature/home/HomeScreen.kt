@@ -1,6 +1,7 @@
 package com.example.studyapp.feature.home
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,9 +52,11 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
         when (state) {
             is HomeUiState.SuccessAddingUser -> {
                 Toast.makeText(context, "User ${(state as HomeUiState.SuccessAddingUser).user} added!", Toast.LENGTH_SHORT).show()
+                viewModel.onEventFinished()
             }
             is HomeUiState.ErrorAddingUser -> {
                 Toast.makeText(context, "Error: ${(state as HomeUiState.ErrorAddingUser).message}", Toast.LENGTH_SHORT).show()
+                viewModel.onEventFinished()
             }
             else -> {}
         }
@@ -74,46 +78,38 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
-            .padding(horizontal = 32.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text("Insert name") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-            Spacer(Modifier.height(16.dp))
-            Button(onClick = {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Insert name") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Spacer(Modifier.height(16.dp))
+                Button(onClick = {
                     viewModel.addUser(text)
                     text = "" },
-                enabled = isButtonEnabled,
-                modifier = Modifier.fillMaxWidth()) {
-                Text("Insert")
-            }
-
-            // Region to states animation
-            if (state is HomeUiState.Loading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                    enabled = isButtonEnabled,
+                    modifier = Modifier.fillMaxWidth()) {
+                    Text("Insert")
                 }
             }
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                when (state) {
-//                    is HomeUiState.Idle -> { }
-//
-//                    is HomeUiState.Loading -> {
-//                        CircularProgressIndicator()
-//                    }
-//                }
-//            }
+
+            if (state is HomeUiState.Loading) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                    contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = Color.White)
+                }
+            }
         }
     }
 }
