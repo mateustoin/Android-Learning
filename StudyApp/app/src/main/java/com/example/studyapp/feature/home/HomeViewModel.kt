@@ -6,16 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studyapp.data.FakeUserRepository
 import com.example.studyapp.data.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
-    // Change for Hilt later, manual instance for now
-    private val repository: UserRepository = FakeUserRepository
-
-    // Starts with loading because the app just got opened
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: UserRepository
+) : ViewModel() {
+    // Starts with Idle because the app just got opened
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 

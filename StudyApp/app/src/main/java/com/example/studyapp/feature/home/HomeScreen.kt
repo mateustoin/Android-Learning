@@ -41,7 +41,7 @@ import com.example.studyapp.feature.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onNavigateToSecond: () -> Unit,
+fun HomeScreen( onNavigateToSecond: () -> Unit,
                viewModel : HomeViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var text by rememberSaveable { mutableStateOf("") }
@@ -64,7 +64,7 @@ fun HomeScreen(onNavigateToSecond: () -> Unit,
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Tela Principal") },
+                title = { Text("User Registration") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )

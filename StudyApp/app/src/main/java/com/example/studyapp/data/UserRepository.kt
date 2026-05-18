@@ -1,6 +1,12 @@
 package com.example.studyapp.data
 
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.delay
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // Basic model for User
 data class User(val name: String)
@@ -11,8 +17,18 @@ interface UserRepository {
     suspend fun addUser(name: String)
 }
 
-// Singleton until Hilt is implemented
-/*class*/object FakeUserRepository : UserRepository {
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(
+        repository: FakeUserRepository
+    ): UserRepository
+}
+
+class FakeUserRepository @Inject constructor() : UserRepository {
     // List to keep User information on Memory
     private val userList = mutableListOf<User>()
 
