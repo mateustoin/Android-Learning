@@ -100,4 +100,7 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.dagger.hilt.compiler)
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }
