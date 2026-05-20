@@ -1,17 +1,22 @@
 package com.example.studyapp.feature.users
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studyapp.feature.users.UserUiState
 import com.example.studyapp.feature.users.UserViewModel
+
+private const val TAG = "UserListScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +65,27 @@ fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
                         val users = (state as UserUiState.SuccessLoadingUsers).users
                         if (users.isNotEmpty()){
                             items(users) { user ->
-                                Text(text = user.name, modifier = Modifier.padding(16.dp))
+//                                Text(text = user.name, modifier = Modifier.padding(16.dp))
+//                                HorizontalDivider()
+                                ListItem(
+                                    headlineContent = { Text(text = user.name) },
+                                    leadingContent = {
+                                        Icon(
+                                            imageVector = Icons.Default.Person,
+                                            contentDescription = "User Avatar",
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    trailingContent = {
+                                        IconButton(onClick = { Log.i(TAG, "UserListScreen: Delete User (${user.name})") }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = "Delete User",
+                                                tint = MaterialTheme.colorScheme.error
+                                            )
+                                        }
+                                    }
+                                )
                                 HorizontalDivider()
                             }
                         } else {
