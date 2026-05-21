@@ -1,4 +1,4 @@
-package com.example.studyapp.data
+package com.example.studyapp.data.repository
 
 import dagger.Binds
 import dagger.Module
@@ -24,7 +24,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(
-        repository: FakeUserRepository
+//        repository: FakeUserRepository
+        repository: UserApiRepository
     ): UserRepository
 }
 

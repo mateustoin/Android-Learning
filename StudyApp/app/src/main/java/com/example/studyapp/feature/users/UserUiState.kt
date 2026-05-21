@@ -1,6 +1,6 @@
 package com.example.studyapp.feature.users
 
-import com.example.studyapp.data.User
+import com.example.studyapp.data.repository.User
 
 sealed interface UserUiState {
     // A Object is a singleton, so it will be only one instance of Loading while the app is running
