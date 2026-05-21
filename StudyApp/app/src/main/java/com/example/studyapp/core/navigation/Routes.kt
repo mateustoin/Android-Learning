@@ -3,7 +3,7 @@ package com.example.studyapp.core.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-object HomeRoute
+object UserRegistrationRoute
 
 @Serializable
 object UserListRoute

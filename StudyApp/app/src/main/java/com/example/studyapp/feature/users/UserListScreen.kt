@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,6 +28,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studyapp.feature.users.UserUiState
 import com.example.studyapp.feature.users.UserViewModel
@@ -35,7 +38,7 @@ private const val TAG = "UserListScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
+fun UserListScreen(onNavigateToUserRegistration: () -> Unit, viewModel: UserViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -49,9 +52,9 @@ fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                onBack()
+                onNavigateToUserRegistration()
             }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Default.Add, contentDescription = "Add User")
             }
         }
     ) { innerPadding ->
@@ -65,8 +68,6 @@ fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
                         val users = (state as UserUiState.SuccessLoadingUsers).users
                         if (users.isNotEmpty()){
                             items(users) { user ->
-//                                Text(text = user.name, modifier = Modifier.padding(16.dp))
-//                                HorizontalDivider()
                                 ListItem(
                                     headlineContent = { Text(text = user.name) },
                                     leadingContent = {
@@ -101,5 +102,9 @@ fun UserListScreen(viewModel: UserViewModel, onBack: () -> Unit) {
                 }
             }
         }
+    }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.refreshUsers()
     }
 }

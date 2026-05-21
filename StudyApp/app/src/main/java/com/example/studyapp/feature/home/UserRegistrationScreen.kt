@@ -11,14 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,26 +37,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.studyapp.feature.home.HomeUiState
-import com.example.studyapp.feature.home.HomeViewModel
+import com.example.studyapp.feature.home.UserRegistrationUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen( onNavigateToSecond: () -> Unit,
-               viewModel : HomeViewModel) {
+fun UserRegistrationScreen( onNavigateToUserList: () -> Unit,
+               viewModel : UserRegistrationViewModel) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var text by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
-    val isButtonEnabled = text.isNotBlank() && state !is HomeUiState.Loading
+    val isButtonEnabled = text.isNotBlank() && state !is UserRegistrationUiState.Loading
 
     LaunchedEffect(state) {
         when (state) {
-            is HomeUiState.SuccessAddingUser -> {
-                Toast.makeText(context, "User ${(state as HomeUiState.SuccessAddingUser).user} added!", Toast.LENGTH_SHORT).show()
+            is UserRegistrationUiState.SuccessAddingUser -> {
+                Toast.makeText(context, "User ${(state as UserRegistrationUiState.SuccessAddingUser).user} added!", Toast.LENGTH_SHORT).show()
                 viewModel.onEventFinished()
             }
-            is HomeUiState.ErrorAddingUser -> {
-                Toast.makeText(context, "Error: ${(state as HomeUiState.ErrorAddingUser).message}", Toast.LENGTH_SHORT).show()
+            is UserRegistrationUiState.ErrorAddingUser -> {
+                Toast.makeText(context, "Error: ${(state as UserRegistrationUiState.ErrorAddingUser).message}", Toast.LENGTH_SHORT).show()
                 viewModel.onEventFinished()
             }
             else -> {}
@@ -67,15 +67,16 @@ fun HomeScreen( onNavigateToSecond: () -> Unit,
                 title = { Text("User Registration") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                navigationIcon = {
+                    IconButton(onClick = onNavigateToUserList) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Get back to User List"
+                        )
+                    }
+                }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                onNavigateToSecond()
-            }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Navegar Tela")
-            }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -98,11 +99,11 @@ fun HomeScreen( onNavigateToSecond: () -> Unit,
                     text = "" },
                     enabled = isButtonEnabled,
                     modifier = Modifier.fillMaxWidth()) {
-                    Text("Insert")
+                    Text("Register")
                 }
             }
 
-            if (state is HomeUiState.Loading) {
+            if (state is UserRegistrationUiState.Loading) {
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f)),
