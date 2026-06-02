@@ -1,7 +1,9 @@
 package com.example.studyapp.feature.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,12 +30,20 @@ class UserRegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UserRegistrationUiState.Loading
             try {
-                repository.addUser(name)
+                val user = UserApiModel(name = name)
+                repository.addUser(user = user)
                 _uiState.value = UserRegistrationUiState.SuccessAddingUser(name)
+                Log.i(TAG, "Sucesso adicionando user")
 //                _uiState.value = UserRegistrationUiState.Idle
             } catch (e: Exception) {
+                Log.i(TAG, "Falha adicionando user")
+                Log.i(TAG, "${e.message}")
                 _uiState.value = UserRegistrationUiState.ErrorAddingUser(e.message ?: "An error occurred while adding user")
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "UserRegistrationViewModel"
     }
 }

@@ -27,6 +27,17 @@ class UserViewModel @Inject constructor(
         loadUsers()
     }
 
+    fun deleteUser(userId: Int) {
+        viewModelScope.launch {
+            try {
+                repository.deleteUser(userId)
+                loadUsers()
+            } catch (e: Exception) {
+                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during deleteUser")
+            }
+        }
+    }
+
     private fun loadUsers() {
         // Create a coroutine (viewModelScope) to not freeze the UI
         viewModelScope.launch {

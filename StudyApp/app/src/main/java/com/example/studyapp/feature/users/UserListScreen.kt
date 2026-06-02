@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
@@ -31,8 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.feature.users.UserUiState
 import com.example.studyapp.feature.users.UserViewModel
+import kotlin.collections.isNotEmpty
 
 private const val TAG = "UserListScreen"
 
@@ -78,7 +79,11 @@ fun UserListScreen(onNavigateToUserRegistration: () -> Unit, viewModel: UserView
                                         )
                                     },
                                     trailingContent = {
-                                        IconButton(onClick = { Log.i(TAG, "UserListScreen: Delete User (${user.name})") }) {
+                                        IconButton(onClick = {
+                                            Log.i(TAG, "UserListScreen: Delete User (${user.name}/id: ${user.id})")
+                                            // user.id?.let garante que a função só vai ser chamada quando o id for não nulo
+                                            user.id?.let { viewModel.deleteUser(user.id) }
+                                        }) {
                                             Icon(
                                                 imageVector = Icons.Default.Delete,
                                                 contentDescription = "Delete User",
