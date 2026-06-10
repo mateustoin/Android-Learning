@@ -20,5 +20,5 @@ interface UserApiService {
     @POST("usuarios_fake")
     suspend fun addUser(
         @Body newUser: UserApiModel
-    ): retrofit2.Response<Unit>//UserApiModel
+    ): retrofit2.Response<Unit>
 }

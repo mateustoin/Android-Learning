@@ -7,8 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SettingsSuggest
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,15 +34,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studyapp.data.model.UserApiModel
+import com.example.studyapp.data.preferences.AppTheme
 import com.example.studyapp.feature.users.UserUiState
 import com.example.studyapp.feature.users.UserViewModel
+import com.example.studyapp.viewmodel.MainViewModel
 import kotlin.collections.isNotEmpty
 
 private const val TAG = "UserListScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(onNavigateToUserRegistration: () -> Unit, viewModel: UserViewModel) {
+fun UserListScreen(
+    onNavigateToUserRegistration: () -> Unit,
+    viewModel: UserViewModel,
+    mainViewModel: MainViewModel,
+    themeState: AppTheme
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -48,7 +58,19 @@ fun UserListScreen(onNavigateToUserRegistration: () -> Unit, viewModel: UserView
                 title = { Text("User List") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = { mainViewModel.toggleTheme(themeState) }) {
+                        Icon(
+                            imageVector = when(themeState) {
+                                AppTheme.LIGHT -> Icons.Default.LightMode
+                                AppTheme.DARK -> Icons.Default.DarkMode
+                                else -> Icons.Default.SettingsSuggest
+                            },
+                            contentDescription = "Change Theme"
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
