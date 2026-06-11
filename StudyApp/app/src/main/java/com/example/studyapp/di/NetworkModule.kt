@@ -1,5 +1,6 @@
-package com.example.studyapp.core.network
+package com.example.studyapp.di
 
+import com.example.studyapp.core.network.RetrofitClient
 import com.example.studyapp.data.api.UserApiService
 import dagger.Module
 import dagger.Provides

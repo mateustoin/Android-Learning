@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.studyapp.data.preferences.AppTheme
-import com.example.studyapp.feature.users.UserViewModel
-import com.example.studyapp.feature.home.UserRegistrationViewModel
+import com.example.studyapp.viewmodel.UserViewModel
+import com.example.studyapp.viewmodel.UserRegistrationViewModel
 import com.example.studyapp.feature.home.UserRegistrationScreen
 import com.example.studyapp.feature.users.UserListScreen
 import com.example.studyapp.viewmodel.MainViewModel
