@@ -2,6 +2,8 @@ package com.example.studyapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyapp.data.local.entity.UserEntity
+import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.data.repository.UserRepository
 import com.example.studyapp.feature.users.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,8 +46,17 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UserUiState.Loading
             try {
-                val users = repository.getUsers()
-                _uiState.value = UserUiState.SuccessLoadingUsers(users)
+                repository.getUsers().collect { userEntities ->
+                    val apiModels = userEntities.map { entity ->
+                        UserApiModel(
+                            id = entity.id.toInt(),
+                            name = entity.name,
+                            email = entity.email,
+                            created_at = entity.created_at
+                        )
+                    }
+                    _uiState.value = UserUiState.SuccessLoadingUsers(apiModels)
+                }
             } catch (e: Exception) {
                 _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during loadUsers")
             }

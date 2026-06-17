@@ -3,7 +3,7 @@ package com.example.studyapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studyapp.data.model.UserApiModel
+import com.example.studyapp.data.local.entity.UserEntity
 import com.example.studyapp.data.repository.UserRepository
 import com.example.studyapp.feature.home.UserRegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +31,7 @@ class UserRegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UserRegistrationUiState.Loading
             try {
-                val user = UserApiModel(name = name)
+                val user = UserEntity(name = name)
                 repository.addUser(user = user)
                 _uiState.value = UserRegistrationUiState.SuccessAddingUser(name)
                 Log.i(TAG, "Sucesso adicionando user")

@@ -131,4 +131,9 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.2.1")
     // Alternatively - without an Android dependency.
     implementation("androidx.datastore:datastore-preferences-core:1.2.1")
+
+    val room_version = "2.8.4"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 }
