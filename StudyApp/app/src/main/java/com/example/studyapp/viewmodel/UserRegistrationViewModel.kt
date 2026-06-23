@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studyapp.data.local.entity.UserEntity
 import com.example.studyapp.data.repository.UserRepository
+import com.example.studyapp.domain.model.User
 import com.example.studyapp.feature.home.UserRegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,7 @@ class UserRegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UserRegistrationUiState.Loading
             try {
-                val user = UserEntity(name = name)
+                val user = User(name = name)
                 repository.addUser(user = user)
                 _uiState.value = UserRegistrationUiState.SuccessAddingUser(name)
                 Log.i(TAG, "Sucesso adicionando user")

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserApiModel(
-    val id: Int? = null,
+    val id: Long? = null,
     val name: String,
     val email: String? = null,
     //val avatarUrl: String? = null,

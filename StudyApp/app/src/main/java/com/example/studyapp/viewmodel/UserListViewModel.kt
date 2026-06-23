@@ -30,7 +30,7 @@ class UserViewModel @Inject constructor(
         loadUsers()
     }
 
-    fun deleteUser(userId: Int) {
+    fun deleteUser(userId: Long) {
         viewModelScope.launch {
             try {
                 repository.deleteUser(userId)
@@ -49,7 +49,7 @@ class UserViewModel @Inject constructor(
                 repository.getUsers().collect { userEntities ->
                     val apiModels = userEntities.map { entity ->
                         UserApiModel(
-                            id = entity.id.toInt(),
+                            id = entity.id,
                             name = entity.name,
                             email = entity.email,
                             created_at = entity.created_at
