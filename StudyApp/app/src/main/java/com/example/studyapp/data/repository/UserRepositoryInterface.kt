@@ -17,4 +17,5 @@ interface UserRepository {
 //    suspend fun addUser(user: UserApiModel)
     suspend fun addUser(user: User)
     suspend fun deleteUser(userId: Long)
+    suspend fun refreshUsers()
 }

@@ -38,4 +38,8 @@ class UserApiRepository @Inject constructor(
     override suspend fun deleteUser(userId: Long) {
         apiService.deleteUser("eq.$userId")
     }
+
+    override suspend fun refreshUsers() {
+        TODO("Not yet implemented")
+    }
 }

@@ -14,6 +14,15 @@ fun UserEntity.toUser(): User {
     )
 }
 
+fun User.toApiModel(): UserApiModel {
+    return UserApiModel(
+        id = id,
+        name = name,
+        email = email,
+        created_at = created_at
+    )
+}
+
 // Domain format to Room (entity)
 fun User.toEntity(): UserEntity {
     return UserEntity(
@@ -28,6 +37,15 @@ fun User.toEntity(): UserEntity {
 fun UserApiModel.toEntity(): UserEntity {
     return UserEntity(
         id = id?.toLong() ?: 0L,
+        name = name,
+        email = email,
+        created_at = created_at
+    )
+}
+
+fun UserEntity.toDomain(): User {
+    return User(
+        id = id,
         name = name,
         email = email,
         created_at = created_at

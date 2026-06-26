@@ -1,7 +1,6 @@
 package com.example.studyapp.di
 
-import com.example.studyapp.data.repository.UserApiRepository
-import com.example.studyapp.data.repository.UserLocalRepository
+import com.example.studyapp.data.repository.OfflineUserRepository
 import com.example.studyapp.data.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -16,6 +15,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(
-        repository: UserLocalRepository//UserApiRepository
+        repository: OfflineUserRepository
     ): UserRepository
 }

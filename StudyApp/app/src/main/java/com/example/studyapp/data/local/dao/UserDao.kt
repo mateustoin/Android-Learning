@@ -16,11 +16,18 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: UserEntity)
 
-//    @Update
-//    suspend fun updateUser(user: UserEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUsers(users: List<UserEntity>)
 
-//    @Delete
-//    suspend fun deleteUser(user: UserEntity)
+    @Query("DELETE FROM users")
+    suspend fun deleteAllUsers()
+
+    @androidx.room.Transaction
+    suspend fun clearAndInsertUsers(users: List<UserEntity>) {
+        deleteAllUsers()
+        insertUsers(users)
+    }
+
     @Query("DELETE FROM users WHERE id = :userId")
     suspend fun deleteUser(userId: Long)
 }

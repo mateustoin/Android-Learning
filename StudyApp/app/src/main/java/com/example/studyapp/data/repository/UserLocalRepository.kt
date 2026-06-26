@@ -37,4 +37,8 @@ class UserLocalRepository @Inject constructor(
     override suspend fun deleteUser(userId: Long) {
         userDao.deleteUser(userId)
     }
+
+    override suspend fun refreshUsers() {
+        TODO("Not yet implemented")
+    }
 }
