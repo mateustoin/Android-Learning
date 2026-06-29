@@ -10,5 +10,6 @@ data class UserEntity(
     val name: String,
     val email: String? = null,
 //    @ColumnInfo(name = "created_at")
-    val created_at: String? = null
+    val created_at: String? = null,
+    val isSynced: Boolean = true
 )

@@ -27,7 +27,15 @@ class UserViewModel @Inject constructor(
     }
 
     fun refreshUsers() {
-        loadUsers()
+//        loadUsers()
+        viewModelScope.launch {
+            try {
+                repository.refreshUsers()
+//                loadUsers()
+            } catch (e: Exception) {
+                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during refreshUsers")
+            }
+        }
     }
 
     fun deleteUser(userId: Long) {
@@ -45,20 +53,23 @@ class UserViewModel @Inject constructor(
         // Create a coroutine (viewModelScope) to not freeze the UI
         viewModelScope.launch {
             _uiState.value = UserUiState.Loading
-            try {
-                repository.getUsers().collect { userEntities ->
-                    val apiModels = userEntities.map { entity ->
-                        UserApiModel(
-                            id = entity.id,
-                            name = entity.name,
-                            email = entity.email,
-                            created_at = entity.created_at
-                        )
-                    }
-                    _uiState.value = UserUiState.SuccessLoadingUsers(apiModels)
-                }
-            } catch (e: Exception) {
-                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during loadUsers")
+//            try {
+//                repository.getUsers().collect { userEntities ->
+//                    val apiModels = userEntities.map { entity ->
+//                        UserApiModel(
+//                            id = entity.id,
+//                            name = entity.name,
+//                            email = entity.email,
+//                            created_at = entity.created_at
+//                        )
+//                    }
+//                    _uiState.value = UserUiState.SuccessLoadingUsers(apiModels)
+//                }
+//            } catch (e: Exception) {
+//                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during loadUsers")
+//            }
+            repository.getUsers().collect { users ->
+                _uiState.value = UserUiState.SuccessLoadingUsers(users)
             }
         }
     }

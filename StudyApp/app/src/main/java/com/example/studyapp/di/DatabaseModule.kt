@@ -2,6 +2,7 @@ package com.example.studyapp.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.studyapp.data.local.AppDatabase
 import com.example.studyapp.data.local.dao.UserDao
 import dagger.Module
@@ -24,6 +25,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "study_app_db"
         ).fallbackToDestructiveMigration(dropAllTables = true)
+            .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .build()
     }
 

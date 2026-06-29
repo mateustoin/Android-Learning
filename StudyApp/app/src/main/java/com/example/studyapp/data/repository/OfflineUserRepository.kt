@@ -35,12 +35,10 @@ class OfflineUserRepository @Inject constructor(
     }
 
     override suspend fun deleteUser(userId: Long) {
-        // Delete locally first
-        userDao.deleteUser(userId)
-        
         // Attempt to delete from remote API
         try {
             apiService.deleteUser("eq.$userId")
+            userDao.deleteUser(userId)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -48,10 +46,7 @@ class OfflineUserRepository @Inject constructor(
 
     override suspend fun refreshUsers() {
         try {
-            // Fetch users from API
             val remoteUsers = apiService.getAllUsers()
-            
-            // Map API models to entities and sync with local DB
             val entities = remoteUsers.map { it.toEntity() }
             userDao.clearAndInsertUsers(entities)
         } catch (e: Exception) {
