@@ -29,7 +29,6 @@ class OfflineUserRepository @Inject constructor(
         try {
             apiService.addUser(user.toApiModel())
         } catch (e: Exception) {
-            // In a full implementation, you might mark this record for later sync
             e.printStackTrace()
         }
     }
