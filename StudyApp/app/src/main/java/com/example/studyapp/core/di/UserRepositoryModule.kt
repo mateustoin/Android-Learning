@@ -1,7 +1,7 @@
 package com.example.studyapp.di
 
 import com.example.studyapp.data.repository.OfflineUserRepository
-import com.example.studyapp.data.repository.UserRepository
+import com.example.studyapp.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

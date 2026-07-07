@@ -1,6 +1,5 @@
-package com.example.studyapp.feature.users
+package com.example.studyapp.features.users
 
-import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.domain.model.User
 
 sealed interface UserUiState {

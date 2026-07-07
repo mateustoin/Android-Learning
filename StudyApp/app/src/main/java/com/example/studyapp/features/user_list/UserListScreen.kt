@@ -1,4 +1,4 @@
-package com.example.studyapp.feature.users
+package com.example.studyapp.features.users
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column

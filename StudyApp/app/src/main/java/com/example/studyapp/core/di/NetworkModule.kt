@@ -1,7 +1,7 @@
 package com.example.studyapp.di
 
 import com.example.studyapp.core.network.RetrofitClient
-import com.example.studyapp.data.api.UserApiService
+import com.example.studyapp.data.remote.api.UserApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
