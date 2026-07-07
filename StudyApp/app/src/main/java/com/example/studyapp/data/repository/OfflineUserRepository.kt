@@ -1,11 +1,12 @@
 package com.example.studyapp.data.repository
 
-import com.example.studyapp.data.api.UserApiService
-import com.example.studyapp.data.local.dao.UserDao
+import com.example.studyapp.data.remote.api.UserApiService
+import com.example.studyapp.data.local.room.dao.UserDao
 import com.example.studyapp.data.mapper.toApiModel
 import com.example.studyapp.data.mapper.toEntity
 import com.example.studyapp.data.mapper.toUser
 import com.example.studyapp.domain.model.User
+import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.example.studyapp.features.home
+package com.example.studyapp.features.user_registration
 
 sealed interface UserRegistrationUiState {
     object Idle : UserRegistrationUiState

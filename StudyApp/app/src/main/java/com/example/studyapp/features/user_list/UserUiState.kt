@@ -1,4 +1,4 @@
-package com.example.studyapp.features.users
+package com.example.studyapp.features.user_list
 
 import com.example.studyapp.domain.model.User
 

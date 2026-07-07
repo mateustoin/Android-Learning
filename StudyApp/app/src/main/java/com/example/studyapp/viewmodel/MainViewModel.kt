@@ -2,8 +2,8 @@ package com.example.studyapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studyapp.data.preferences.AppTheme
-import com.example.studyapp.data.preferences.ThemePreferences
+import com.example.studyapp.data.local.preferences.AppTheme
+import com.example.studyapp.data.local.preferences.ThemePreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

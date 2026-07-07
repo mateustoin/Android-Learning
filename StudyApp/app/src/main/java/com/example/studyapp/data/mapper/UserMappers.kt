@@ -1,6 +1,6 @@
 package com.example.studyapp.data.mapper
 
-import com.example.studyapp.data.local.entity.UserEntity
+import com.example.studyapp.data.local.room.entity.UserEntity
 import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.domain.model.User
 

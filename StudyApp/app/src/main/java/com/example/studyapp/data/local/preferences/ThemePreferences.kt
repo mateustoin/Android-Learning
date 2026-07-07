@@ -1,4 +1,4 @@
-package com.example.studyapp.data.preferences
+package com.example.studyapp.data.local.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

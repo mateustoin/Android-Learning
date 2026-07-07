@@ -1,10 +1,11 @@
-package com.example.studyapp.data.local.dao
+package com.example.studyapp.data.local.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.studyapp.data.local.entity.UserEntity
+import androidx.room.Transaction
+import com.example.studyapp.data.local.room.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -22,7 +23,7 @@ interface UserDao {
     @Query("DELETE FROM users")
     suspend fun deleteAllUsers()
 
-    @androidx.room.Transaction
+    @Transaction
     suspend fun clearAndInsertUsers(users: List<UserEntity>) {
         deleteAllUsers()
         insertUsers(users)

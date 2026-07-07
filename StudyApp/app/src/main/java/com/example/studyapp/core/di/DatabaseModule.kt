@@ -1,10 +1,10 @@
-package com.example.studyapp.di
+package com.example.studyapp.core.di
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.studyapp.data.local.AppDatabase
-import com.example.studyapp.data.local.dao.UserDao
+import com.example.studyapp.data.local.room.AppDatabase
+import com.example.studyapp.data.local.room.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

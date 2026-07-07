@@ -3,10 +3,9 @@ package com.example.studyapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studyapp.data.local.entity.UserEntity
-import com.example.studyapp.data.repository.UserRepository
+import com.example.studyapp.domain.repository.UserRepository
 import com.example.studyapp.domain.model.User
-import com.example.studyapp.feature.home.UserRegistrationUiState
+import com.example.studyapp.features.user_registration.UserRegistrationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,9 +1,9 @@
 package com.example.studyapp.data.repository
 
-import com.example.studyapp.data.api.UserApiService
-import com.example.studyapp.data.local.entity.UserEntity
+import com.example.studyapp.data.remote.api.UserApiService
 import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.domain.model.User
+import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

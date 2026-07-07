@@ -1,4 +1,4 @@
-package com.example.studyapp.features.home
+package com.example.studyapp.features.user_registration
 
 import android.widget.Toast
 import androidx.compose.foundation.background

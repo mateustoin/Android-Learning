@@ -1,6 +1,5 @@
-package com.example.studyapp.ui.theme
+package com.example.studyapp.core.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +10,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.example.studyapp.data.preferences.AppTheme
+import com.example.studyapp.data.local.preferences.AppTheme
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

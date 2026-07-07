@@ -1,4 +1,4 @@
-package com.example.studyapp.di
+package com.example.studyapp.core.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

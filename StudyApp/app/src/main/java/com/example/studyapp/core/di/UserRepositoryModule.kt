@@ -1,4 +1,4 @@
-package com.example.studyapp.di
+package com.example.studyapp.core.di
 
 import com.example.studyapp.data.repository.OfflineUserRepository
 import com.example.studyapp.domain.repository.UserRepository

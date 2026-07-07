@@ -1,4 +1,4 @@
-package com.example.studyapp.features.users
+package com.example.studyapp.features.user_list
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.studyapp.data.preferences.AppTheme
+import com.example.studyapp.data.local.preferences.AppTheme
 import com.example.studyapp.viewmodel.UserViewModel
 import com.example.studyapp.viewmodel.MainViewModel
 import kotlin.collections.isNotEmpty

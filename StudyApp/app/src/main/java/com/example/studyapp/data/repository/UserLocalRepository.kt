@@ -1,10 +1,10 @@
 package com.example.studyapp.data.repository
 
-import com.example.studyapp.data.local.dao.UserDao
-import com.example.studyapp.data.local.entity.UserEntity
+import com.example.studyapp.data.local.room.dao.UserDao
+import com.example.studyapp.data.local.room.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
-import com.example.studyapp.data.model.UserApiModel
 import com.example.studyapp.domain.model.User
+import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
