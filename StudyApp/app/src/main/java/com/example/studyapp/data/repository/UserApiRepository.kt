@@ -1,7 +1,7 @@
 package com.example.studyapp.data.repository
 
 import com.example.studyapp.data.remote.api.UserApiService
-import com.example.studyapp.data.model.UserApiModel
+import com.example.studyapp.data.remote.model.UserApiModel
 import com.example.studyapp.domain.model.User
 import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow

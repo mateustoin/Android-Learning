@@ -1,6 +1,6 @@
 package com.example.studyapp.data.remote.api
 
-import com.example.studyapp.data.model.UserApiModel
+import com.example.studyapp.data.remote.model.UserApiModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
