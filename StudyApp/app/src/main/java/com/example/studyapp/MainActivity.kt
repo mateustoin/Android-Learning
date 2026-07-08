@@ -14,7 +14,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studyapp.core.theme.StudyAppTheme
 import com.example.studyapp.core.navigation.AppNavigation
-import com.example.studyapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

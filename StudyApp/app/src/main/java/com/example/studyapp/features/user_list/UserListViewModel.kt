@@ -1,9 +1,8 @@
-package com.example.studyapp.viewmodel
+package com.example.studyapp.features.user_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studyapp.domain.repository.UserRepository
-import com.example.studyapp.features.user_list.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.studyapp.viewmodel.UserRegistrationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -32,8 +32,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studyapp.data.local.preferences.AppTheme
-import com.example.studyapp.viewmodel.UserViewModel
-import com.example.studyapp.viewmodel.MainViewModel
+import com.example.studyapp.MainViewModel
 import kotlin.collections.isNotEmpty
 
 private const val TAG = "UserListScreen"

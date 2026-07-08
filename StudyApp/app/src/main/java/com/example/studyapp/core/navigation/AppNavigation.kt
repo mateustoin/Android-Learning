@@ -6,11 +6,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.studyapp.data.local.preferences.AppTheme
-import com.example.studyapp.viewmodel.UserViewModel
-import com.example.studyapp.viewmodel.UserRegistrationViewModel
+import com.example.studyapp.features.user_list.UserViewModel
+import com.example.studyapp.features.user_registration.UserRegistrationViewModel
 import com.example.studyapp.features.user_registration.UserRegistrationScreen
 import com.example.studyapp.features.user_list.UserListScreen
-import com.example.studyapp.viewmodel.MainViewModel
+import com.example.studyapp.MainViewModel
 
 @Composable
 fun AppNavigation(mainViewModel: MainViewModel, themeState: AppTheme) {
