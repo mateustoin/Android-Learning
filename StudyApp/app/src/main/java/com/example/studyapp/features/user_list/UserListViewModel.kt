@@ -2,7 +2,9 @@ package com.example.studyapp.features.user_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.studyapp.domain.repository.UserRepository
+import com.example.studyapp.domain.usecase.DeleteUserUseCase
+import com.example.studyapp.domain.usecase.GetUsersUseCase
+import com.example.studyapp.domain.usecase.RefreshUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,25 +14,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val repository: UserRepository
+    private val getUsersUseCase: GetUsersUseCase,
+    private val refreshUsersUseCase: RefreshUsersUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase
 ) : ViewModel() {
-    // Starts with loading because the page just got opened
+    
     private val _uiState = MutableStateFlow<UserUiState>(UserUiState.Loading)
     val uiState: StateFlow<UserUiState> = _uiState.asStateFlow()
 
     init {
-        // Load users as soon as the ViewModel is created
         loadUsers()
     }
 
     fun refreshUsers() {
-//        loadUsers()
         viewModelScope.launch {
             try {
-                repository.refreshUsers()
-//                loadUsers()
+                refreshUsersUseCase()
             } catch (e: Exception) {
-                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during refreshUsers")
+                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during refresh")
             }
         }
     }
@@ -38,34 +39,17 @@ class UserViewModel @Inject constructor(
     fun deleteUser(userId: Long) {
         viewModelScope.launch {
             try {
-                repository.deleteUser(userId)
-                loadUsers()
+                deleteUserUseCase(userId)
             } catch (e: Exception) {
-                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during deleteUser")
+                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during delete")
             }
         }
     }
 
     private fun loadUsers() {
-        // Create a coroutine (viewModelScope) to not freeze the UI
         viewModelScope.launch {
             _uiState.value = UserUiState.Loading
-//            try {
-//                repository.getUsers().collect { userEntities ->
-//                    val apiModels = userEntities.map { entity ->
-//                        UserApiModel(
-//                            id = entity.id,
-//                            name = entity.name,
-//                            email = entity.email,
-//                            created_at = entity.created_at
-//                        )
-//                    }
-//                    _uiState.value = UserUiState.SuccessLoadingUsers(apiModels)
-//                }
-//            } catch (e: Exception) {
-//                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during loadUsers")
-//            }
-            repository.getUsers().collect { users ->
+            getUsersUseCase().collect { users ->
                 _uiState.value = UserUiState.SuccessLoadingUsers(users)
             }
         }

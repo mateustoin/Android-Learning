@@ -43,11 +43,11 @@ fun UserApiModel.toEntity(): UserEntity {
     )
 }
 
-fun UserEntity.toDomain(): User {
-    return User(
-        id = id,
-        name = name,
-        email = email,
-        created_at = created_at
-    )
-}
+//fun UserEntity.toDomain(): User {
+//    return User(
+//        id = id,
+//        name = name,
+//        email = email,
+//        created_at = created_at
+//    )
+//}

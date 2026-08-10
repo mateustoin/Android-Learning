@@ -38,27 +38,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserRegistrationScreen( onNavigateToUserList: () -> Unit,
-               viewModel : UserRegistrationViewModel
+fun UserRegistrationScreen(
+    onNavigateToUserList: () -> Unit,
+    viewModel: UserRegistrationViewModel
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var text by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
     val isButtonEnabled = text.isNotBlank() && state !is UserRegistrationUiState.Loading
 
-    LaunchedEffect(state) {
-        when (state) {
-            is UserRegistrationUiState.SuccessAddingUser -> {
-                Toast.makeText(context, "User ${(state as UserRegistrationUiState.SuccessAddingUser).user} added!", Toast.LENGTH_SHORT).show()
-                viewModel.onEventFinished()
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UserRegistrationUiEvent.Success -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+                is UserRegistrationUiEvent.Error -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
             }
-            is UserRegistrationUiState.ErrorAddingUser -> {
-                Toast.makeText(context, "Error: ${(state as UserRegistrationUiState.ErrorAddingUser).message}", Toast.LENGTH_SHORT).show()
-                viewModel.onEventFinished()
-            }
-            else -> {}
         }
     }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -78,12 +79,14 @@ fun UserRegistrationScreen( onNavigateToUserList: () -> Unit,
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(horizontal = 32.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
@@ -92,20 +95,25 @@ fun UserRegistrationScreen( onNavigateToUserList: () -> Unit,
                     singleLine = true
                 )
                 Spacer(Modifier.height(16.dp))
-                Button(onClick = {
-                    viewModel.addUser(text)
-                    text = "" },
+                Button(
+                    onClick = {
+                        viewModel.addUser(text)
+                        text = ""
+                    },
                     enabled = isButtonEnabled,
-                    modifier = Modifier.fillMaxWidth()) {
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text("Register")
                 }
             }
 
             if (state is UserRegistrationUiState.Loading) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f)),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator(color = Color.White)
                 }
             }

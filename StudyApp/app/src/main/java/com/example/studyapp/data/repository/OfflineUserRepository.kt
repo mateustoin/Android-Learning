@@ -1,5 +1,6 @@
 package com.example.studyapp.data.repository
 
+import android.util.Log
 import com.example.studyapp.data.remote.api.UserApiService
 import com.example.studyapp.data.local.room.dao.UserDao
 import com.example.studyapp.data.mapper.toApiModel
@@ -10,6 +11,8 @@ import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+
+private const val TAG = "OfflineUserRepository"
 
 class OfflineUserRepository @Inject constructor(
     private val userDao: UserDao,
@@ -23,24 +26,36 @@ class OfflineUserRepository @Inject constructor(
     }
 
     override suspend fun addUser(user: User) {
-        // Save locally first
-        userDao.insertUser(user.toEntity())
-        
-        // Attempt to sync with remote API
         try {
-            apiService.addUser(user.toApiModel())
+            // Save locally first
+            userDao.insertUser(user.toEntity())
+            
+            // Attempt to sync with remote API
+            val response = apiService.addUser(user.toApiModel())
+            if (!response.isSuccessful) {
+                Log.e(TAG, "Failed to sync user addition: ${response.message()}")
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error adding user: ${e.message}", e)
         }
     }
 
     override suspend fun deleteUser(userId: Long) {
-        // Attempt to delete from remote API
         try {
-            apiService.deleteUser("eq.$userId")
-            userDao.deleteUser(userId)
+            // Attempt to delete from remote API
+            val response = apiService.deleteUser("eq.$userId")
+            if (response.isSuccessful) {
+                userDao.deleteUser(userId)
+            } else {
+                Log.e(TAG, "Failed to delete user from remote: ${response.message()}")
+                // Optional: even if remote fails, we might want to delete locally 
+                // but usually sync requires both. For now, following original logic but safer.
+                userDao.deleteUser(userId)
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error deleting user: ${e.message}", e)
+            // Fallback: delete locally anyway?
+            userDao.deleteUser(userId)
         }
     }
 
@@ -50,7 +65,8 @@ class OfflineUserRepository @Inject constructor(
             val entities = remoteUsers.map { it.toEntity() }
             userDao.clearAndInsertUsers(entities)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error refreshing users: ${e.message}", e)
+            throw e // Re-throw so ViewModel can show error state
         }
     }
 }
