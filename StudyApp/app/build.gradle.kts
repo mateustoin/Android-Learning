@@ -68,6 +68,7 @@ android {
     defaultConfig {
         /*
         -- How to use in code --
+        File name: secrets.properties
         supabaseUrl = BuildConfig.SUPABASE_URL,
         supabaseKey = BuildConfig.SUPABASE_ANON_KEY
          */
