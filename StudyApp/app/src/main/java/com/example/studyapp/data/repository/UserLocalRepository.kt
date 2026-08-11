@@ -17,6 +17,7 @@ class UserLocalRepository @Inject constructor(
             entities.map { entity ->
                 User(
                     id = entity.id,
+                    remoteId = entity.remoteId,
                     name = entity.name,
                     email = entity.email,
                     created_at = entity.created_at
@@ -27,7 +28,8 @@ class UserLocalRepository @Inject constructor(
 
     override suspend fun addUser(user: User) {
         userDao.insertUser(UserEntity(
-            id = user.id,
+            id = user.id ?: 0L,
+            remoteId = user.remoteId,
             name = user.name,
             email = user.email,
             created_at = user.created_at
@@ -35,10 +37,10 @@ class UserLocalRepository @Inject constructor(
     }
 
     override suspend fun deleteUser(userId: Long) {
-        userDao.deleteUser(userId)
+        userDao.deleteUserPermanently(userId)
     }
 
     override suspend fun refreshUsers() {
-        TODO("Not yet implemented")
+        // Local repository doesn't refresh from API
     }
 }

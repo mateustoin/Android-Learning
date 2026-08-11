@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -18,8 +19,9 @@ interface UserApiService {
         @Query("id") idFilter: String
     ): Response<Unit>
 
+    @Headers("Prefer: return=representation")
     @POST("usuarios_fake")
     suspend fun addUser(
         @Body newUser: UserApiModel
-    ): Response<Unit>
+    ): Response<List<UserApiModel>>
 }

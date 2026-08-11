@@ -3,6 +3,7 @@ package com.example.studyapp.core.di
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.work.WorkManager
 import com.example.studyapp.data.local.room.AppDatabase
 import com.example.studyapp.data.local.room.dao.UserDao
 import dagger.Module
@@ -31,4 +32,10 @@ object DatabaseModule {
 
     @Provides
     fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(
+        @ApplicationContext context: Context
+    ): WorkManager = WorkManager.getInstance(context)
 }

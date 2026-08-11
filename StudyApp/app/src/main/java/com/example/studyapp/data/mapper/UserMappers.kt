@@ -8,6 +8,7 @@ import com.example.studyapp.domain.model.User
 fun UserEntity.toUser(): User {
     return User(
         id = id,
+        remoteId = remoteId,
         name = name,
         email = email,
         created_at = created_at
@@ -16,7 +17,7 @@ fun UserEntity.toUser(): User {
 
 fun User.toApiModel(): UserApiModel {
     return UserApiModel(
-        id = id,
+        id = remoteId?.toLongOrNull(),
         name = name,
         email = email,
         created_at = created_at
@@ -26,7 +27,8 @@ fun User.toApiModel(): UserApiModel {
 // Domain format to Room (entity)
 fun User.toEntity(): UserEntity {
     return UserEntity(
-        id = id,
+        id = id ?: 0L,
+        remoteId = remoteId,
         name = name,
         email = email,
         created_at = created_at
@@ -36,18 +38,11 @@ fun User.toEntity(): UserEntity {
 // API Model (Retrofit) to Entity (Room format)
 fun UserApiModel.toEntity(): UserEntity {
     return UserEntity(
-        id = id?.toLong() ?: 0L,
+        id = 0L, // Use 0 to let Room auto-generate if needed, or we might need to find by remoteId
+        remoteId = id?.toString(),
         name = name,
         email = email,
-        created_at = created_at
+        created_at = created_at,
+        isSynced = true
     )
 }
-
-//fun UserEntity.toDomain(): User {
-//    return User(
-//        id = id,
-//        name = name,
-//        email = email,
-//        created_at = created_at
-//    )
-//}

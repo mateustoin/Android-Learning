@@ -11,6 +11,7 @@ class UserMapperTest {
     fun `toUser must convert Entity to Domain keeping the fields integrity`() {
         val entity = UserEntity(
             id = 10,
+            remoteId = "uuid-123",
             name = "Mateus Antonio",
             email = "mateustoin@gmail.com",
             created_at = "2020-03-23"
@@ -19,6 +20,7 @@ class UserMapperTest {
         val domainFromEntity = entity.toUser()
 
         assertThat(domainFromEntity.id).isEqualTo(entity.id)
+        assertThat(domainFromEntity.remoteId).isEqualTo(entity.remoteId)
         assertThat(domainFromEntity.name).isEqualTo(entity.name)
         assertThat(domainFromEntity.email).isEqualTo(entity.email)
     }
@@ -27,6 +29,7 @@ class UserMapperTest {
     fun `toApiModel must convert User to Api Model keeping the fields integrity`() {
         val user = User(
             id = 10,
+            remoteId = "123",
             name = "Mateus Antonio",
             email = "mateustoin@gmail.com",
             created_at = "2020-03-23"
@@ -34,7 +37,7 @@ class UserMapperTest {
 
         val apiModelFromDomain = user.toApiModel()
 
-        assertThat(apiModelFromDomain.id).isEqualTo(user.id)
+        assertThat(apiModelFromDomain.id).isEqualTo(123L)
         assertThat(apiModelFromDomain.name).isEqualTo(user.name)
         assertThat(apiModelFromDomain.email).isEqualTo(user.email)
     }
@@ -50,8 +53,9 @@ class UserMapperTest {
 
         val entityFromApiModel = apiModel.toEntity()
 
-        assertThat(entityFromApiModel.id).isEqualTo(apiModel.id)
+        assertThat(entityFromApiModel.remoteId).isEqualTo("10")
         assertThat(entityFromApiModel.name).isEqualTo(apiModel.name)
         assertThat(entityFromApiModel.email).isEqualTo(apiModel.email)
+        assertThat(entityFromApiModel.isSynced).isTrue()
     }
 }

@@ -1,11 +1,15 @@
 package com.example.studyapp.data.repository
 
 import android.util.Log
-import com.example.studyapp.data.remote.api.UserApiService
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.studyapp.data.local.room.dao.UserDao
-import com.example.studyapp.data.mapper.toApiModel
 import com.example.studyapp.data.mapper.toEntity
 import com.example.studyapp.data.mapper.toUser
+import com.example.studyapp.data.remote.api.UserApiService
+import com.example.studyapp.data.remote.sync.SyncWorker
 import com.example.studyapp.domain.model.User
 import com.example.studyapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +20,8 @@ private const val TAG = "OfflineUserRepository"
 
 class OfflineUserRepository @Inject constructor(
     private val userDao: UserDao,
-    private val apiService: UserApiService
+    private val apiService: UserApiService,
+    private val workManager: WorkManager
 ): UserRepository {
 
     override suspend fun getUsers(): Flow<List<User>> {
@@ -27,46 +32,55 @@ class OfflineUserRepository @Inject constructor(
 
     override suspend fun addUser(user: User) {
         try {
-            // Save locally first
-            userDao.insertUser(user.toEntity())
-            
-            // Attempt to sync with remote API
-            val response = apiService.addUser(user.toApiModel())
-            if (!response.isSuccessful) {
-                Log.e(TAG, "Failed to sync user addition: ${response.message()}")
-            }
+            Log.d(TAG, "Adding user locally: ${user.name}")
+            // Local-first: Save to Room with isSynced = false
+            userDao.insertUser(user.toEntity().copy(isSynced = false))
+            scheduleSync()
         } catch (e: Exception) {
-            Log.e(TAG, "Error adding user: ${e.message}", e)
+            Log.e(TAG, "Error adding user locally: ${e.message}", e)
         }
     }
 
     override suspend fun deleteUser(userId: Long) {
         try {
-            // Attempt to delete from remote API
-            val response = apiService.deleteUser("eq.$userId")
-            if (response.isSuccessful) {
-                userDao.deleteUser(userId)
-            } else {
-                Log.e(TAG, "Failed to delete user from remote: ${response.message()}")
-                // Optional: even if remote fails, we might want to delete locally 
-                // but usually sync requires both. For now, following original logic but safer.
-                userDao.deleteUser(userId)
-            }
+            Log.d(TAG, "Marking user for deletion: $userId")
+            // Local-first: Mark for deletion
+            userDao.markForDeletion(userId)
+            scheduleSync()
         } catch (e: Exception) {
-            Log.e(TAG, "Error deleting user: ${e.message}", e)
-            // Fallback: delete locally anyway?
-            userDao.deleteUser(userId)
+            Log.e(TAG, "Error marking user for deletion: ${e.message}", e)
         }
     }
 
     override suspend fun refreshUsers() {
         try {
+            Log.d(TAG, "Refreshing users from remote...")
             val remoteUsers = apiService.getAllUsers()
+            Log.d(TAG, "Fetched ${remoteUsers.size} users from remote")
+            
             val entities = remoteUsers.map { it.toEntity() }
-            userDao.clearAndInsertUsers(entities)
+            // With the unique index on remoteId, this will update existing users and add new ones
+            userDao.insertUsers(entities)
+            
+            // Optional: Remove local users that have a remoteId but are not in the fetched list
+            // (meaning they were deleted on the server)
+            // For a production app, we'd handle this more carefully.
         } catch (e: Exception) {
             Log.e(TAG, "Error refreshing users: ${e.message}", e)
-            throw e // Re-throw so ViewModel can show error state
+            throw e
         }
+    }
+
+    private fun scheduleSync() {
+        Log.d(TAG, "Scheduling sync worker...")
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        workManager.enqueue(syncRequest)
     }
 }

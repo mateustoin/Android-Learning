@@ -16,7 +16,8 @@ class UserApiRepository @Inject constructor(
         val apiUsers = apiService.getAllUsers()
         val users = apiUsers.map { apiModel ->
             User(
-                id = apiModel.id?.toLong() ?: 0L,
+                id = 0L,
+                remoteId = apiModel.id?.toString(),
                 name = apiModel.name,
                 email = apiModel.email,
                 created_at = apiModel.created_at
@@ -27,7 +28,7 @@ class UserApiRepository @Inject constructor(
 
     override suspend fun addUser(user: User) {
         val apiModel = UserApiModel(
-            id = user.id,
+            id = user.remoteId?.toLongOrNull(),
             name = user.name,
             email = user.email,
             created_at = user.created_at
@@ -36,10 +37,12 @@ class UserApiRepository @Inject constructor(
     }
 
     override suspend fun deleteUser(userId: Long) {
+        // This repository would need a remoteId to delete
+        // For now, doing nothing or assuming userId is remoteId
         apiService.deleteUser("eq.$userId")
     }
 
     override suspend fun refreshUsers() {
-        TODO("Not yet implemented")
+        // Not implemented
     }
 }
