@@ -5,5 +5,6 @@ data class User(
     val remoteId: String? = null,
     val name: String,
     val email: String? = null,
+    val avatarUrl: String? = null,
     val created_at: String? = null,
 )

@@ -11,6 +11,7 @@ fun UserEntity.toUser(): User {
         remoteId = remoteId,
         name = name,
         email = email,
+        avatarUrl = avatarUrl,
         created_at = created_at
     )
 }
@@ -20,6 +21,7 @@ fun User.toApiModel(): UserApiModel {
         id = remoteId?.toLongOrNull(),
         name = name,
         email = email,
+        avatarUrl = avatarUrl,
         created_at = created_at
     )
 }
@@ -31,6 +33,7 @@ fun User.toEntity(): UserEntity {
         remoteId = remoteId,
         name = name,
         email = email,
+        avatarUrl = avatarUrl,
         created_at = created_at
     )
 }
@@ -42,6 +45,7 @@ fun UserApiModel.toEntity(): UserEntity {
         remoteId = id?.toString(),
         name = name,
         email = email,
+        avatarUrl = avatarUrl,
         created_at = created_at,
         isSynced = true
     )
