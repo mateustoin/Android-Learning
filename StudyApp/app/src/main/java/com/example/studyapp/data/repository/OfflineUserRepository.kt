@@ -2,6 +2,7 @@ package com.example.studyapp.data.repository
 
 import android.util.Log
 import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -81,6 +82,11 @@ class OfflineUserRepository @Inject constructor(
             .setConstraints(constraints)
             .build()
 
-        workManager.enqueue(syncRequest)
+//        workManager.enqueue(syncRequest)
+        workManager.enqueueUniqueWork(
+            "sync_users_work",
+            ExistingWorkPolicy.REPLACE, // Ou KEEP, dependendo da estratégia
+            syncRequest
+        )
     }
 }
