@@ -14,6 +14,7 @@ data class UserEntity(
     val remoteId: String? = null,
     val name: String,
     val email: String? = null,
+    val avatarUrl: String? = null,
     val created_at: String? = null,
     val isSynced: Boolean = false,
     val isDeleted: Boolean = false,

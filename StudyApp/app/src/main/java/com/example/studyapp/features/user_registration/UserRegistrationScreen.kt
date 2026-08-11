@@ -43,9 +43,10 @@ fun UserRegistrationScreen(
     viewModel: UserRegistrationViewModel
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var text by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
-    val isButtonEnabled = text.isNotBlank() && state !is UserRegistrationUiState.Loading
+    val isButtonEnabled = name.isNotBlank() && state !is UserRegistrationUiState.Loading
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -88,17 +89,26 @@ fun UserRegistrationScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = name,
+                    onValueChange = { name = it },
                     label = { Text("Insert name") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Spacer(Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Insert email (optional)") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
                 Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        viewModel.addUser(text)
-                        text = ""
+                        viewModel.addUser(name, email.takeIf { it.isNotBlank() })
+                        name = ""
+                        email = ""
                     },
                     enabled = isButtonEnabled,
                     modifier = Modifier.fillMaxWidth()

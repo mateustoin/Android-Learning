@@ -24,13 +24,17 @@ class UserRegistrationViewModel @Inject constructor(
     private val _eventChannel = Channel<UserRegistrationUiEvent>()
     val eventFlow = _eventChannel.receiveAsFlow()
 
-    fun addUser(name: String) {
+    fun addUser(name: String, email: String?) {
         if (name.isBlank()) return
 
         viewModelScope.launch {
             _uiState.value = UserRegistrationUiState.Loading
             try {
-                addUserUseCase(User(name = name))
+                // Generate a random avatar URL using a seed based on name/time
+                val seed = System.currentTimeMillis()
+                val avatarUrl = "https://i.pravatar.cc/150?u=$seed"
+                
+                addUserUseCase(User(name = name, email = email, avatarUrl = avatarUrl))
                 _eventChannel.send(UserRegistrationUiEvent.Success("User $name added!"))
                 _uiState.value = UserRegistrationUiState.Idle
             } catch (e: Exception) {

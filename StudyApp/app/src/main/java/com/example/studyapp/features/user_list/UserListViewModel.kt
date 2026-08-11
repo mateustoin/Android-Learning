@@ -31,7 +31,12 @@ class UserViewModel @Inject constructor(
             try {
                 refreshUsersUseCase()
             } catch (e: Exception) {
-                _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during refresh")
+                // If the current state is already SuccessLoadingUsers, we don't want to overwrite it with an error.
+                // This allows the user to see cached data even if the refresh fails (e.g., when offline).
+                if (_uiState.value !is UserUiState.SuccessLoadingUsers) {
+                    _uiState.value = UserUiState.ErrorLoadingUsers(e.message ?: "An error occurred during refresh")
+                }
+                android.util.Log.e("UserViewModel", "Failed to refresh users", e)
             }
         }
     }

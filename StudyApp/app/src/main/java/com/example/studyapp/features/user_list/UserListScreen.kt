@@ -3,8 +3,10 @@ package com.example.studyapp.features.user_list
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DarkMode
@@ -27,10 +29,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.example.studyapp.data.local.preferences.AppTheme
 import com.example.studyapp.MainViewModel
 import kotlin.collections.isNotEmpty
@@ -94,11 +100,17 @@ fun UserListScreen(
                             items(users) { user ->
                                 ListItem(
                                     headlineContent = { Text(text = user.name) },
+                                    supportingContent = user.email?.let { { Text(text = it) } },
                                     leadingContent = {
-                                        Icon(
-                                            imageVector = Icons.Default.Person,
+                                        AsyncImage(
+                                            model = user.avatarUrl,
                                             contentDescription = "User Avatar",
-                                            tint = MaterialTheme.colorScheme.primary
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .clip(CircleShape),
+                                            contentScale = ContentScale.Crop,
+                                            placeholder = rememberVectorPainter(Icons.Default.Person),
+                                            error = rememberVectorPainter(Icons.Default.Person)
                                         )
                                     },
                                     trailingContent = {
