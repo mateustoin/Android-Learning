@@ -97,7 +97,11 @@ fun UserListScreen(
                     is UserUiState.SuccessLoadingUsers -> {
                         val users = (state as UserUiState.SuccessLoadingUsers).users
                         if (users.isNotEmpty()){
-                            items(users) { user ->
+                            items(
+                                items = users,
+                                key = { it.id ?: it.remoteId ?: it.hashCode() },
+                                contentType = { "user_item" }
+                            ) { user ->
                                 ListItem(
                                     headlineContent = { Text(text = user.name) },
                                     supportingContent = user.email?.let { { Text(text = it) } },
