@@ -10,4 +10,5 @@ data class User(
     val email: String? = null,
     val avatarUrl: String? = null,
     val created_at: String? = null,
+    val isSynced: Boolean = false,
 )

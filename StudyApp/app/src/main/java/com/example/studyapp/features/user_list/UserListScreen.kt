@@ -1,14 +1,19 @@
 package com.example.studyapp.features.user_list
 
 import android.util.Log
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LightMode
@@ -103,7 +108,18 @@ fun UserListScreen(
                                 contentType = { "user_item" }
                             ) { user ->
                                 ListItem(
-                                    headlineContent = { Text(text = user.name) },
+                                    headlineContent = {
+                                        Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                            Text(text = user.name)
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Icon(
+                                                imageVector = if (user.isSynced) Icons.Default.CloudDone else Icons.Default.CloudSync,
+                                                contentDescription = if (user.isSynced) "Synced" else "Not Synced",
+                                                modifier = Modifier.size(16.dp),
+                                                tint = if (user.isSynced) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                                            )
+                                        }
+                                    },
                                     supportingContent = user.email?.let { { Text(text = it) } },
                                     leadingContent = {
                                         AsyncImage(

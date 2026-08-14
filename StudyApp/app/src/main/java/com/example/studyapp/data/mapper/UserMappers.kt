@@ -12,7 +12,8 @@ fun UserEntity.toUser(): User {
         name = name,
         email = email,
         avatarUrl = avatarUrl,
-        created_at = created_at
+        created_at = created_at,
+        isSynced = isSynced
     )
 }
 
@@ -34,7 +35,8 @@ fun User.toEntity(): UserEntity {
         name = name,
         email = email,
         avatarUrl = avatarUrl,
-        created_at = created_at
+        created_at = created_at,
+        isSynced = isSynced
     )
 }
 
