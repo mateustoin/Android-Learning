@@ -15,7 +15,7 @@ val md_theme_light_background = Color(0xFFFFFBFE)
 val md_theme_light_onBackground = Color(0xFF1C1B1F)
 val md_theme_light_surface = Color(0xFFFFFBFE)
 val md_theme_light_onSurface = Color(0xFF1C1B1F)
-val md_theme_light_error = Color(0xB32611)
+val md_theme_light_error = Color(0xFFB32611)
 val md_theme_light_onError = Color(0xFFFFFFFF)
 
 // Dark Colors
