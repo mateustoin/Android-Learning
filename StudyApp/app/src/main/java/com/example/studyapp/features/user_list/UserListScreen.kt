@@ -1,9 +1,11 @@
 package com.example.studyapp.features.user_list
 
-import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -42,6 +45,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.studyapp.data.local.preferences.AppTheme
 import com.example.studyapp.MainViewModel
 import kotlin.collections.isNotEmpty
@@ -93,15 +101,21 @@ fun UserListScreen(
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            LazyColumn {
-                when (state) {
-                    is UserUiState.Loading -> {
-                        item { Text("Loading...", modifier = Modifier.padding(16.dp)) }
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            when (state) {
+                is UserUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Loading...")
                     }
-                    is UserUiState.SuccessLoadingUsers -> {
-                        val users = (state as UserUiState.SuccessLoadingUsers).users
-                        if (users.isNotEmpty()){
+                }
+                is UserUiState.SuccessLoadingUsers -> {
+                    val users = (state as UserUiState.SuccessLoadingUsers).users
+                    if (users.isNotEmpty()) {
+                        LazyColumn {
                             items(
                                 items = users,
                                 key = { it.id ?: it.remoteId ?: it.hashCode() },
@@ -109,7 +123,7 @@ fun UserListScreen(
                             ) { user ->
                                 ListItem(
                                     headlineContent = {
-                                        Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
                                             Text(text = user.name)
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Icon(
@@ -135,7 +149,7 @@ fun UserListScreen(
                                     },
                                     trailingContent = {
                                         IconButton(onClick = {
-                                            Log.i(TAG, "UserListScreen: Delete User (${user.name}/id: ${user.id})")
+                                            android.util.Log.i(TAG, "UserListScreen: Delete User (${user.name}/id: ${user.id})")
                                             // user.id?.let garante que a função só vai ser chamada quando o id for não nulo
                                             user.id?.let { viewModel.deleteUser(user.id) }
                                         }) {
@@ -149,15 +163,14 @@ fun UserListScreen(
                                 )
                                 HorizontalDivider()
                             }
-                        } else {
-                            item {
-                                Text(text = "User List is empty!", modifier = Modifier.padding(16.dp))
-                            }
                         }
-
+                    } else {
+                        EmptyUserListState()
                     }
-                    is UserUiState.ErrorLoadingUsers -> {
-                        item { Text("Error: ${(state as UserUiState.ErrorLoadingUsers).message}", modifier = Modifier.padding(16.dp)) }
+                }
+                is UserUiState.ErrorLoadingUsers -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Error: ${(state as UserUiState.ErrorLoadingUsers).message}", color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
@@ -166,5 +179,41 @@ fun UserListScreen(
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         viewModel.refreshUsers()
+    }
+}
+
+@Composable
+fun EmptyUserListState() {
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.Asset("loading.json")
+        //LottieCompositionSpec.Url("https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json")
+    )
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier.size(250.dp)
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(
+            text = "User List is empty!",
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = "Try adding some users or refreshing the list.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
